@@ -3,7 +3,7 @@ torch==2.0.1
 torchvision==0.15.2
 torchaudio==2.0.2
 pillow
-opencv-python
+opencv-python==4.8.0.76
 fastapi
 python-jose
 sqlalchemy
