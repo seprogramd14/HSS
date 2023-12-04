@@ -14,8 +14,3 @@ app.include_router(video.router)
 # user-log-in : 유저 로그인 api
 # user-image : 유저 얼굴 사진 저장 api
 # log : 로그 확인 api
-
-
-@app.get('/log')
-def get_log():
-    return

@@ -6,6 +6,5 @@ router = APIRouter(prefix='/video')
 
 
 @router.get('/open', status_code=200)
-async def open_video():
-
-    return StreamingResponse(get_streaming_video(), media_type='multipart/x-mixed-replace; boundary-PNPframe')
+def open_video():
+    return StreamingResponse(get_streaming_video(), media_type="multipart/x-mixed-replace; boundary=frame")
