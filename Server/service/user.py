@@ -11,7 +11,7 @@ class UserService:
     secret_key = "3a3r340tjas3jfj3jaj30jfjjeu3uey2"
     jwt_algorithm = "HS256"
 
-    def check_password(self, password, check_password):
+    def check_password(self, password, password_check):
         if len(password) < 8:
             raise HTTPException(status_code=422, detail=self.message)
 
@@ -21,7 +21,7 @@ class UserService:
         if not any(char.isalpha() for char in password):
             raise HTTPException(status_code=422, detail=self.message)
 
-        if password != check_password:
+        if password != password_check:
             raise HTTPException(status_code=422, detail="비밀번호가 일치하지 않습니다.")
 
     def hash_password(self, plain_password: str) -> str:

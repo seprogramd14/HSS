@@ -1,7 +1,7 @@
 import os
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from database.orm import User
-from schema.request import SignUpRequest
+from schema.request import SignUpRequest, LogInRequest
 from database.repository import UserRepository
 from schema.respone import UserSchema, JWTResponse
 from service.user import UserService
@@ -26,7 +26,7 @@ def user_sign_up(
     username: User | None = user_repo.get_username(request.username)
     if username is not None:
         raise HTTPException(status_code=422, detail="이미 존재하는 사용자 이름입니다.")
-    user_service.check_password(request.password, request.check_password)
+    user_service.check_password(request.password, request.password_check)
 
     hashed_password: str = user_service.hash_password(
         plain_password=request.password
@@ -44,7 +44,7 @@ def user_sign_up(
 
 @router.post('/log-in', status_code=201)
 async def user_log_in(
-    request: SignUpRequest,
+    request: LogInRequest,
     user_repo: UserRepository = Depends(),
     user_service: UserService = Depends(),
 ):
@@ -83,7 +83,7 @@ async def user_image(
     with open(os.path.join(UPLOAD_URL+'/'+username, filename), "wb") as f:
         f.write(content)
 
-    make_data_pt()  # data.pt 생성
+    await make_data_pt()  # data.pt 생성
 
     return {"username": username, "image_path": image_path}
 

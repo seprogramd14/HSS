@@ -7,6 +7,17 @@ class SignUpRequest(BaseModel):
     password: str
     password_check: str
 
+    @field_validator('username', 'password', 'password_check')
+    def check_empty(cls, v):
+        if not v or v.isspace():
+            raise HTTPException(status_code=422, detail="필수 항목을 입력하세요")
+        return v
+
+
+class LogInRequest(BaseModel):
+    username: str
+    password: str
+
     @field_validator('username', 'password')
     def check_empty(cls, v):
         if not v or v.isspace():
