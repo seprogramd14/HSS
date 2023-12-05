@@ -1,6 +1,6 @@
 # https://github.com/biplob004/live_face_recognition/blob/main/wcam.ipynb 참고
 
-# 수정할 사안 : data.pt가 없을 때 -> 오류 발생, Databases에 사진이 없을 때 -> 오류 발생, UNKNOWN 표시, 여러 사람 인식 가능한 지
+# 수정할 사안 : Databases에 사진이 없을 때 -> 오류 발생, UNKNOWN 표시, 여러 사람 인식 가능한 지
 
 from facenet_pytorch import MTCNN, InceptionResnetV1  # 이거 알아야 함
 import torch
@@ -18,7 +18,7 @@ parser.add_argument("-name", "--name", type=str, help="입력한 이름으로 �
 args = parser.parse_args()
 
 
-# 24 line에서 사용
+# 31 line에서 사용
 def collate_fn(x):
     return x[0]
 

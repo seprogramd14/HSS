@@ -1,10 +1,11 @@
-import uuid, os
+import os
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from database.orm import User
 from schema.request import SignUpRequest
 from database.repository import UserRepository
 from schema.respone import UserSchema, JWTResponse
 from service.user import UserService
+from service.video import make_data_pt
 from security import get_access_token
 
 router = APIRouter(prefix="/user")
@@ -72,12 +73,17 @@ async def user_image(
     user_repo: UserRepository = Depends()
 ):
     content = await file.read()
-    filename = f"{str(uuid.uuid4())}.jpg"
     username: User | None = user_service.decode_jwt(access_token)
+    filename = f"{str(username)}.jpg"
     username, image_path = user_repo.save_user_image(username, UPLOAD_URL+'/'+filename)
 
-    with open(os.path.join(UPLOAD_URL, filename), "wb") as f:
+    if not os.path.exists(UPLOAD_URL+'/'+username):
+        os.mkdir(UPLOAD_URL+'/'+username)
+
+    with open(os.path.join(UPLOAD_URL+'/'+username, filename), "wb") as f:
         f.write(content)
+
+    make_data_pt()  # data.pt 생성
 
     return {"username": username, "image_path": image_path}
 
