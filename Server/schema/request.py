@@ -5,6 +5,7 @@ from fastapi import HTTPException
 class SignUpRequest(BaseModel):
     username: str
     password: str
+    password_check: str
 
     @field_validator('username', 'password')
     def check_empty(cls, v):

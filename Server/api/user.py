@@ -25,7 +25,7 @@ def user_sign_up(
     username: User | None = user_repo.get_username(request.username)
     if username is not None:
         raise HTTPException(status_code=422, detail="이미 존재하는 사용자 이름입니다.")
-    user_service.check_password(request.password)
+    user_service.check_password(request.password, request.check_password)
 
     hashed_password: str = user_service.hash_password(
         plain_password=request.password
