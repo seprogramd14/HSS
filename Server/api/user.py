@@ -98,8 +98,7 @@ async def user_delete(
     image_url = user_repo.get_user_image(username)
     user_repo.delete_user(username)
 
-    URL = UPLOAD_URL + image_url
-    if os.path.isfile(URL):
-        os.remove(URL)
+    if image_url is not None:
+        os.remove(UPLOAD_URL + image_url)
 
     return {'deleted_username': username}

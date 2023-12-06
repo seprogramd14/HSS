@@ -1,4 +1,5 @@
 from sqlalchemy import select, update, delete
+from sqlalchemy.sql import text
 from sqlalchemy.orm import Session
 from fastapi import Depends
 from database.connection import get_db
@@ -28,5 +29,8 @@ class UserRepository:
 
     def delete_user(self, username: str):
         self.session.execute(delete(User).where(User.username == username))
+        self.session.execute(text('ALTER TABLE user AUTO_INCREMENT=1;'))
+        self.session.execute(text('SET @COUNT = 0;'))
+        self.session.execute(text('UPDATE user SET id = @COUNT:=@COUNT+1;'))
         self.session.commit()
         return username
