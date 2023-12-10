@@ -102,4 +102,3 @@ async def user_delete(
         os.remove(UPLOAD_URL + image_url)
 
     return {'deleted_username': username}
- 
