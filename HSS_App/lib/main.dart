@@ -15,6 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HSS',
       home: MyPage(),
+      theme: ThemeData(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
     );
   }
 }
@@ -98,7 +102,7 @@ class MyHome extends StatelessWidget {
             height: 130,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
             child: Column(
-              children: [
+              children: const [
                 Icon(Icons.camera_alt, size: 91,),
                 Text('실시간 캠 확인', style: TextStyle(fontSize: 25),),
               ],
@@ -118,6 +122,13 @@ class MyInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      primary: Color(0xffD3EAFF),
+      minimumSize: Size(234, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15)
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff99CFFF),
@@ -146,13 +157,23 @@ class MyInfoPage extends StatelessWidget {
               '(유저 이름)',
               style: TextStyle(fontSize: 24),
             ),
+            SizedBox(height: 28),
             ElevatedButton(
-                onPressed: () {},
-                child: Text('자신의 사진 설정', style: TextStyle(fontSize: 24),)
+              style: style,
+              onPressed: () {},
+              child: Text('자신의 사진 설정', style: TextStyle(color: Colors.black, fontSize: 24),),
             ),
+            SizedBox(height: 18),
             ElevatedButton(
+              style: style,
+              onPressed: () {},
+              child: Text('로그아웃', style: TextStyle(color: Color(0xffFF4040), fontSize: 24),),
+            ),
+            SizedBox(height: 18),
+            ElevatedButton(
+                style: style,
                 onPressed: () {},
-                child: Text('로그아웃', style: TextStyle(color: Color(0xffFF4040), fontSize: 24),)
+                child: Text('회원 탈퇴', style: TextStyle(color: Color(0xffff0000), fontSize: 24),)
             ),
           ],
         ),
