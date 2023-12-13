@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-// 회원가입 페이지
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     final OutlineInputBorder border = OutlineInputBorder(
@@ -92,7 +96,8 @@ class SignUp extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pushNamed('/LogIn');
                   },
-                  child: Text('회원가입', style: TextStyle( color: Colors.black, fontSize: 18),)
+                  child: Text('회원가입',
+                    style: TextStyle(color: Colors.black, fontSize: 18),)
               ),
             )
           ],

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'mypage.dart';
 
 // 로그인 페이지
-class LogIn extends StatelessWidget {
+class LogIn extends StatefulWidget {
   const LogIn({super.key});
 
+  @override
+  State<LogIn> createState() => _LogInState();
+}
+
+class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     final OutlineInputBorder border = OutlineInputBorder(
