@@ -94,7 +94,6 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
         title: Text('회원가입', style: TextStyle(color: Colors.white),),
         backgroundColor: Color(0xff99CFFF),
-        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
