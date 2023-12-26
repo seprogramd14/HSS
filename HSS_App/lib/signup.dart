@@ -2,34 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
-
-class User {
-  late final String username;
-  late final String password;
-  late final String passwordCheck;
-
-  User({this.username = '', this.password = '', this.passwordCheck = ''});
-
-  factory User.fromJson(Map<String, dynamic> userMap) {
-    return User(
-      username: userMap['username'],
-      password: userMap['password'],
-      passwordCheck: userMap['passwordCheck'],
-    );
-  }
-}
-
-Future<User> signup() async {
-  final response = await http.get(Uri.parse("http://127.0.0.1:8000/user/sign-up"));
-
-  if (response.statusCode == 201) {
-    final userMap = json.decode(response.body);
-    return User.fromJson(userMap);
-  }
-
-  throw Exception('데이터 수신 실패');
-}
 
 
 class SignUp extends StatefulWidget {
@@ -48,8 +20,58 @@ class _SignUpState extends State<SignUp> {
   FocusNode passwordFocus = FocusNode();
   FocusNode passwordCheckFocus = FocusNode();
 
+  // 서버로 데이터 보내기
+  Future<Map> signUp() async {
+    final Map<String, dynamic> signUpInfo = {
+      "username": username.text,
+      "password": password.text,
+      "password_check": passwordCheck.text,
+    };
+    final response = await Dio().post(
+        'http://127.0.0.1:8000/user/sign-up',
+        data: jsonEncode(signUpInfo),
+    );
+    return response.data;
+  }
+
+  // 화면에 alert 창 띄우기
+  void flutterDialog(String title, String text) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)
+              ),
+              title: Column(
+                children: [
+                  Text(title),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(text),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("확인"),
+                )
+              ],
+            );
+          },
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 테두리 스타일
     final OutlineInputBorder border = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(15.0)),
       borderSide: BorderSide(
@@ -58,14 +80,16 @@ class _SignUpState extends State<SignUp> {
       ),
     );
 
+    // 버튼 스타일
     final ButtonStyle style = ElevatedButton.styleFrom(
-      primary: Color(0xffD3EAFF),
+      backgroundColor: Color(0xffD3EAFF),
       minimumSize: Size(100, 50),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
       ),
     );
 
+    // 회원가입 화면
     return Scaffold(
       appBar: AppBar(
         title: Text('회원가입', style: TextStyle(color: Colors.white),),
@@ -138,58 +162,39 @@ class _SignUpState extends State<SignUp> {
               height: 45,
               margin: EdgeInsets.fromLTRB(0, 35, 0, 0),
               child: ElevatedButton(
-                  style: style,
-                  onPressed: () {
-                    print(username.text);
-                    print(password.text);
-                    print(passwordCheck.text);
-                    Navigator.of(context).pushNamed('/LogIn');
-                  },
-                  child: Text('회원가입',
-                    style: TextStyle(color: Colors.black, fontSize: 18),)
+                style: style,
+                child: Text(
+                  '회원가입',
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+                onPressed: () async {
+                  try {
+                    // 회원가입 함수 호출
+                    var result = await signUp();
+                    // UI 업데이트
+                    print(result);
+                    flutterDialog("성공", "회원가입에 성공했습니다.");
+                  } catch (error) {
+                    // 오류 처리
+                    if (error is DioException) {
+                      if (error.response != null) {
+                        // 서버 응답이 있는 경우
+                        print("Server responded with: ${error.response!.data['detail']}");
+                        flutterDialog("실패", error.response!.data['detail']);
+                      } else {
+                        // 서버 응답이 없는 경우
+                        print("Connection failed: ${error.message}");
+                        flutterDialog("오류", "서버 에러");
+                      }
+                    } else {
+                      // 다른 종류의 오류 처리
+                      print("Unexpected error: $error");
+                      flutterDialog("오류", "알 수 없는 오류 발생");
+                    }
+                  }
+                },
               ),
             ),
-            // FutureBuilder(
-            //   future: signup(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.hasData) {
-            //       showDialog(
-            //         context: context,
-            //         barrierDismissible: false,
-            //         builder: (BuildContext ctx) {
-            //           return AlertDialog(
-            //             shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(10.0),
-            //             ),
-            //             title: Column(
-            //               children: const [
-            //                 Text('회원가입에 성공했습니다.'),
-            //               ],
-            //             ),
-            //             content: Column(
-            //               mainAxisSize: MainAxisSize.min,
-            //               mainAxisAlignment: MainAxisAlignment.start,
-            //               children: const [
-            //                 Text('로그인 화면으로 돌아갑니다.'),
-            //               ],
-            //             ),
-            //             actions: [
-            //               TextButton(
-            //                   onPressed: () {
-            //                     Navigator.pop(context);
-            //                   },
-            //                   child: Text('확인')
-            //               )
-            //             ],
-            //           );
-            //         },
-            //       );
-            //     } else if (snapshot.hasError) {
-            //       return Text('${snapshot.error}');
-            //     }
-            //     return CircularProgressIndicator();
-            //   },
-            // ),
           ],
         ),
       ),
