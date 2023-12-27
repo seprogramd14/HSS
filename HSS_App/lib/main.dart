@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      home: SignUp(),
+      home: LogIn(),
       title: 'HSS',
       routes: {
         '/LogIn': (context) => const LogIn(),

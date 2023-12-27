@@ -59,7 +59,11 @@ class _SignUpState extends State<SignUp> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (title == "회원가입 성공") {
+                      Navigator.of(context).pushNamed('/LogIn');
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                   child: Text("확인"),
                 )
@@ -94,6 +98,7 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
         title: Text('회원가입', style: TextStyle(color: Colors.white),),
         backgroundColor: Color(0xff99CFFF),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
@@ -156,10 +161,24 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
+            SizedBox(
+              child: TextButton(
+                child: Text(
+                  '로그인 화면으로 돌아가기',
+                  style: TextStyle(
+                    color: Color(0xff0075ff),
+                    fontSize: 12,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/LogIn');
+                },
+              ),
+            ),
             Container(
               width: 200,
               height: 45,
-              margin: EdgeInsets.fromLTRB(0, 35, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
               child: ElevatedButton(
                 style: style,
                 child: Text(
@@ -172,18 +191,18 @@ class _SignUpState extends State<SignUp> {
                     var result = await signUp();
                     // UI 업데이트
                     print(result);
-                    flutterDialog("성공", "회원가입에 성공했습니다.");
+                    flutterDialog("회원가입 성공", "회원가입에 성공했습니다.");
                   } catch (error) {
                     // 오류 처리
                     if (error is DioException) {
                       if (error.response != null) {
                         // 서버 응답이 있는 경우
                         print("Server responded with: ${error.response!.data['detail']}");
-                        flutterDialog("실패", error.response!.data['detail']);
+                        flutterDialog("회원가입 실패", error.response!.data['detail']);
                       } else {
                         // 서버 응답이 없는 경우
                         print("Connection failed: ${error.message}");
-                        flutterDialog("오류", "서버 에러");
+                        flutterDialog("회원가입 오류", "서버 에러");
                       }
                     } else {
                       // 다른 종류의 오류 처리
