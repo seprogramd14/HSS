@@ -54,7 +54,6 @@ class _MyAppPageState extends State<MyAppPage> {
             ],
             currentIndex: _index,
             onTap: (newindex) {
-              print('${newindex}');
               setState(() {
                 _index = newindex;
               });
